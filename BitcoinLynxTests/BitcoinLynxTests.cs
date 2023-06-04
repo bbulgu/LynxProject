@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BitcoinLynxTests
 {
     [TestClass]
-    public class UnitTest1
+    public class BitcoinLynxTests
     {
         TradeData td;
         [TestInitialize]
@@ -35,11 +35,20 @@ namespace BitcoinLynxTests
         }
 
         [TestMethod]
-        public async void testDefaults()
+        public async Task testDefaults()
         {
             TradeData tradeData = new TradeData();       // test default constructor
             await tradeData.QueryTradeData();            // test query and calc
             tradeData.calculateStats(); 
+            Assert.AreNotEqual(0, tradeData.volume, 0);  // assert that there is actually some data we were able to fetch and calculate
+        }
+
+        [TestMethod]
+        public async Task testBitstamp()
+        {
+            TradeData tradeData = new TradeData(15, Exchange.Bitstamp, "btcusd");       // test default constructor
+            await tradeData.QueryTradeData();            // test query and calc
+            tradeData.calculateStats();
             Assert.AreNotEqual(0, tradeData.volume, 0);  // assert that there is actually some data we were able to fetch and calculate
         }
     }
