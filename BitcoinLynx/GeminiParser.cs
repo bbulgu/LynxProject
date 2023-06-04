@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BitcoinLynx
 {
-    internal class GeminiParser : ApiParser
+    public class GeminiParser : ApiParser
     {
         List<Transaction> listOfTransactions = new List<Transaction>();
         public List<Transaction> processJsonString(string jsonString)

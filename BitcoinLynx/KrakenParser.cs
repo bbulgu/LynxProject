@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BitcoinLynx
 {
-    internal class KrakenParser : ApiParser
+    public class KrakenParser : ApiParser
     {
         List<Transaction> listOfTransactions = new List<Transaction>();
         public List<Transaction> processJsonString(string jsonString)

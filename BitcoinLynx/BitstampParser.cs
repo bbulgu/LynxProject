@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BitcoinLynx
 {
-    internal class BitstampParser : ApiParser
+    public class BitstampParser : ApiParser
     {
         String timestamp;
         List<Transaction> listOfTransactions = new List<Transaction>();
