@@ -111,11 +111,32 @@ namespace BitcoinLynx
                         {
                             // we need to check if the date is within our bounds
                             // bitstamp api does not provide filtering given a timestamp so we must do it ourselves here
-                            int intDate = 0;
-                            Int32.TryParse(x.date, out intDate);
-                            if (intDate > t)
+                            if (x.date > t)
                                 listOfTransactions.Add(new Transaction(price: x.price, amount: x.amount));
                         });
+                    }
+
+                    else if (api.Equals(Exchange.Kraken))
+                    {
+                        KrakenRootObject root = JsonConvert.DeserializeObject<KrakenRootObject>(jsonString) ?? new KrakenRootObject();
+                        if (root != null)
+                        {
+                            root.Result.XXBTZUSD.ForEach(x =>
+                            {
+                                Console.WriteLine(x[0]);
+                                Console.WriteLine(x[1]);
+                                double tryPrice = 0;
+                                double tryAmount = 0;
+                                Double.TryParse(x[0].ToString(), out tryPrice);
+                                Double.TryParse(x[1].ToString(), out tryAmount);
+                                Console.WriteLine(tryPrice);
+                                if (tryPrice !=0 && tryAmount != 0)
+                                {
+                                    listOfTransactions.Add(new Transaction(price: tryPrice, amount: tryAmount));
+                                }                                
+                            });
+                        }
+                        
                     }
                 }
                 // TODO: What else in the error handling?

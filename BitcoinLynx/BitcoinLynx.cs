@@ -10,9 +10,9 @@
 
             // Create a timer that triggers the query every 2 minutes
             timer = new Timer(async x => {
-                TradeData tradeData2mins = new TradeData(2, Exchange.Bitstamp, "btcusd");
+                TradeData tradeData2mins = new TradeData(2, Exchange.Kraken, "btcusd");
                 await tradeData2mins.queryAndCalculateAsync();
-                TradeData tradeData10mins = new TradeData(10, Exchange.Bitstamp, "btcusd");
+                TradeData tradeData10mins = new TradeData(10, Exchange.Kraken, "btcusd");
                 await tradeData10mins.queryAndCalculateAsync();
                 double vwap2mins = tradeData2mins.vwap;
                 double vwap10mins = tradeData10mins.vwap;

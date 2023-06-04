@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace BitcoinLynx
 {
@@ -28,6 +24,20 @@ namespace BitcoinLynx
 
     public class BitstampTransaction : Transaction
     {
-        public string date;
+        public int date;
+    }
+
+    public class KrakenResult
+    {
+        // TODO: This name won't work for different currency pairs!
+        [JsonPropertyName("XXBTZUSD")]
+        public List<List<object>> XXBTZUSD { get; set; }
+        public string Last { get; set; }
+    }
+
+    public class KrakenRootObject
+    {
+        public List<string> Error { get; set; }
+        public KrakenResult Result { get; set; }
     }
 }
