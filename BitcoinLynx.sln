@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitcoinLynx", "BitcoinLynx\BitcoinLynx.csproj", "{626B2174-B151-4DE1-98F8-640545523C44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitcoinLynxTests", "BitcoinLynxTests\BitcoinLynxTests.csproj", "{4CF76361-70DB-4B03-9E2B-52D9FB7A0D66}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{626B2174-B151-4DE1-98F8-640545523C44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{626B2174-B151-4DE1-98F8-640545523C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{626B2174-B151-4DE1-98F8-640545523C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{626B2174-B151-4DE1-98F8-640545523C44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CF76361-70DB-4B03-9E2B-52D9FB7A0D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CF76361-70DB-4B03-9E2B-52D9FB7A0D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CF76361-70DB-4B03-9E2B-52D9FB7A0D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CF76361-70DB-4B03-9E2B-52D9FB7A0D66}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {435F9119-3949-452B-A5A7-779AC29CD6ED}
+	EndGlobalSection
+EndGlobal
