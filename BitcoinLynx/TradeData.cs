@@ -1,10 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BitcoinLynx
 {
@@ -14,6 +8,9 @@ namespace BitcoinLynx
         // All three apis share the same names
         public double price { get; set; }
         public double amount { get; set; }
+
+        [JsonConstructor]
+        public Transaction() { }
 
         public Transaction(double price, double amount)
         {
@@ -42,22 +39,34 @@ namespace BitcoinLynx
         public double volume;
         public double vwap;
 
-
+        public TradeData() // init with defaults
+        {
+            mins_ago = 10;
+            api = Exchange.Gemini;
+            currencypair = "btcusd";
+            initAttributes();
+        }
 
         public TradeData(int mins_ago, Exchange api, string currencypair)
         {
             this.mins_ago = mins_ago;
             this.api = api;
             this.currencypair = currencypair;
-            this.timestamp = (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - mins_ago * 60).ToString();
-            this.client = new HttpClient();
+            initAttributes();
+        }
+
+        private string calculateTimeStamp(int mins_ago)
+        {
+            return (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - mins_ago * 60).ToString();
+        }
+
+        private void initAttributes()
+        {
+            timestamp = calculateTimeStamp(this.mins_ago);
+            client = new HttpClient();
             listOfTransactions = new List<Transaction>();
             volume = 0;
             vwap = 0;
-        }
-
-        public TradeData()
-        {
         }
 
         public async Task queryAndCalculateAsync()
@@ -69,7 +78,7 @@ namespace BitcoinLynx
 
 
         // method to query the chosen api with the chosen currency pair
-        async Task QueryTradeData()
+        public async Task QueryTradeData()
         {
             try
             {

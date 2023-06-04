@@ -12,12 +12,7 @@ namespace BitcoinLynx
 
         static void Main(string[] args)
         {
-            // Create an instance of HttpClient
-
             string unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-
-            TradeData tradeData2mins = new TradeData(2, Exchange.Gemini, "btcusd");
-
 
             // Create a timer that triggers the query every 2 minutes
             timer = new Timer(async x => {

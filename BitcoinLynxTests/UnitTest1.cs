@@ -33,5 +33,14 @@ namespace BitcoinLynxTests
         {
             Assert.AreEqual(1, td.vwap, 0.001, "Vwap not calculated correctly");
         }
+
+        [TestMethod]
+        public async void testDefaults()
+        {
+            TradeData tradeData = new TradeData();       // test default constructor
+            await tradeData.QueryTradeData();            // test query and calc
+            tradeData.calculateStats(); 
+            Assert.AreNotEqual(0, tradeData.volume, 0);  // assert that there is actually some data we were able to fetch and calculate
+        }
     }
 }
