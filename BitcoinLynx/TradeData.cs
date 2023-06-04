@@ -11,7 +11,7 @@ namespace BitcoinLynx
     public class TradeData
     {
         int mins_ago;           // how many mins far back we wanna query
-        Exchange api;           // which api to use
+        protected Exchange api;           // which api to use
         string currencypair;    // which currency pair to query for
 
 
@@ -82,8 +82,7 @@ namespace BitcoinLynx
         public async Task QueryTradeData()
         {
             try
-            {
-                 
+            {                 
                 // Perform the GET request
                 HttpResponseMessage response = await client.GetAsync(url);
 
@@ -94,55 +93,28 @@ namespace BitcoinLynx
                     string jsonString = await response.Content.ReadAsStringAsync();
                     if (api.Equals(Exchange.Gemini))
                     {
-                        List<GeminiTransaction> geminiTransactions = JsonConvert.DeserializeObject<List<GeminiTransaction>>(jsonString) ?? new List<GeminiTransaction>();
-                        geminiTransactions.ForEach(x =>
-                        {
-                            listOfTransactions.Add(new Transaction(price: x.price, amount: x.amount));
-                        });
+                        GeminiParser gemini = new GeminiParser();
+                        listOfTransactions = gemini.processJsonString(jsonString);
                     }
 
                     // TODO: Add some error handling in the type conversions here
                     else if (api.Equals(Exchange.Bitstamp))
                     {
-                        List<BitstampTransaction> geminiTransactions = JsonConvert.DeserializeObject<List<BitstampTransaction>>(jsonString) ?? new List<BitstampTransaction>();
-                        int t = 0;
-                        Int32.TryParse(timestamp, out t);
-                        geminiTransactions.ForEach(x =>
-                        {
-                            // we need to check if the date is within our bounds
-                            // bitstamp api does not provide filtering given a timestamp so we must do it ourselves here
-                            if (x.date > t)
-                                listOfTransactions.Add(new Transaction(price: x.price, amount: x.amount));
-                        });
+                        BitstampParser bitstamp = new BitstampParser(timestamp);
+                        listOfTransactions = bitstamp.processJsonString(jsonString);
                     }
 
                     else if (api.Equals(Exchange.Kraken))
                     {
-                        KrakenRootObject root = JsonConvert.DeserializeObject<KrakenRootObject>(jsonString) ?? new KrakenRootObject();
-                        if (root != null)
-                        {
-                            root.Result.XXBTZUSD.ForEach(x =>
-                            {
-                                Console.WriteLine(x[0]);
-                                Console.WriteLine(x[1]);
-                                double tryPrice = 0;
-                                double tryAmount = 0;
-                                Double.TryParse(x[0].ToString(), out tryPrice);
-                                Double.TryParse(x[1].ToString(), out tryAmount);
-                                Console.WriteLine(tryPrice);
-                                if (tryPrice !=0 && tryAmount != 0)
-                                {
-                                    listOfTransactions.Add(new Transaction(price: tryPrice, amount: tryAmount));
-                                }                                
-                            });
-                        }
-                        
+                        KrakenParser kraken = new KrakenParser();
+                        listOfTransactions = kraken.processJsonString(jsonString);
                     }
                 }
                 // TODO: What else in the error handling?
                 else
                 {
                     Console.WriteLine("Request failed with status code: " + response.StatusCode);
+                    // TODO: Retry a couple times and then switch to a different api
                 }
             }
             
