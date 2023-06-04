@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading;
-
-namespace BitcoinLynx
+﻿namespace BitcoinLynx
 {
     class BitcoinLynx
     {
@@ -16,9 +10,9 @@ namespace BitcoinLynx
 
             // Create a timer that triggers the query every 2 minutes
             timer = new Timer(async x => {
-                TradeData tradeData2mins = new TradeData(2, Exchange.Gemini, "btcusd");
+                TradeData tradeData2mins = new TradeData(2, Exchange.Bitstamp, "btcusd");
                 await tradeData2mins.queryAndCalculateAsync();
-                TradeData tradeData10mins = new TradeData(10, Exchange.Gemini, "btcusd");
+                TradeData tradeData10mins = new TradeData(10, Exchange.Bitstamp, "btcusd");
                 await tradeData10mins.queryAndCalculateAsync();
                 double vwap2mins = tradeData2mins.vwap;
                 double vwap10mins = tradeData10mins.vwap;

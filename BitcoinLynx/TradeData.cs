@@ -2,26 +2,6 @@
 
 namespace BitcoinLynx
 {
-    public class Transaction
-    {
-        // There are other fields but these two are all we need and it looks like
-        // All three apis share the same names
-        public double price { get; set; }
-        public double amount { get; set; }
-
-        [JsonConstructor]
-        public Transaction() { }
-
-        public Transaction(double price, double amount)
-        {
-            this.price = price;
-            this.amount = amount;
-        }
-
-        public Transaction(double v1, int v2)
-        {
-        }
-    }
     public enum Exchange
     {
         Kraken,
@@ -31,9 +11,12 @@ namespace BitcoinLynx
     public class TradeData
     {
         int mins_ago;           // how many mins far back we wanna query
-        string timestamp;        // a unix time stamp: time to query from
         Exchange api;           // which api to use
         string currencypair;    // which currency pair to query for
+
+
+        string timestamp;        // a unix time stamp: time to query from (to now)
+        string url;              // url to get (depends on api)
         HttpClient client;
         public List<Transaction> listOfTransactions = new List<Transaction>(); // List of transactions that took place from timespan to now
         public double volume;
@@ -63,10 +46,28 @@ namespace BitcoinLynx
         private void initAttributes()
         {
             timestamp = calculateTimeStamp(this.mins_ago);
+            url = getUrl();
             client = new HttpClient();
             listOfTransactions = new List<Transaction>();
             volume = 0;
             vwap = 0;
+        }
+
+        private string getUrl()
+        {
+            if (api.Equals(Exchange.Bitstamp))
+            {
+                return $"https://www.bitstamp.net/api/v2/transactions/{currencypair}/?time=hour";
+            }
+            else if (api.Equals(Exchange.Kraken))
+            {
+                return $"https://api.kraken.com/0/public/Trades?pair={currencypair}&since={timestamp}";
+            }
+            else  // default to gemini
+            {
+                return $"https://api.gemini.com/v1/trades/{currencypair}?timestamp={timestamp}";
+            }
+
         }
 
         public async Task queryAndCalculateAsync()
@@ -82,26 +83,48 @@ namespace BitcoinLynx
         {
             try
             {
-                if (api.Equals(Exchange.Gemini))
-                { 
+                 
                 // Perform the GET request
-                    HttpResponseMessage response = await client.GetAsync($"https://api.gemini.com/v1/trades/{currencypair}?timestamp={timestamp}");
+                HttpResponseMessage response = await client.GetAsync(url);
 
-                    // Check if the request was successful
-                    if (response.IsSuccessStatusCode)
+                // Check if the request was successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the response content
+                    string jsonString = await response.Content.ReadAsStringAsync();
+                    if (api.Equals(Exchange.Gemini))
                     {
-                        // Read the response content
-                        string jsonString = await response.Content.ReadAsStringAsync();
-
-                        listOfTransactions = JsonConvert.DeserializeObject<List<Transaction>>(jsonString) ?? new List<Transaction>();
+                        List<GeminiTransaction> geminiTransactions = JsonConvert.DeserializeObject<List<GeminiTransaction>>(jsonString) ?? new List<GeminiTransaction>();
+                        geminiTransactions.ForEach(x =>
+                        {
+                            listOfTransactions.Add(new Transaction(price: x.price, amount: x.amount));
+                        });
                     }
-                    // TODO: What else in the error handling?
-                    else
+
+                    // TODO: Add some error handling in the type conversions here
+                    else if (api.Equals(Exchange.Bitstamp))
                     {
-                        Console.WriteLine("Request failed with status code: " + response.StatusCode);
+                        List<BitstampTransaction> geminiTransactions = JsonConvert.DeserializeObject<List<BitstampTransaction>>(jsonString) ?? new List<BitstampTransaction>();
+                        int t = 0;
+                        Int32.TryParse(timestamp, out t);
+                        geminiTransactions.ForEach(x =>
+                        {
+                            // we need to check if the date is within our bounds
+                            // bitstamp api does not provide filtering given a timestamp so we must do it ourselves here
+                            int intDate = 0;
+                            Int32.TryParse(x.date, out intDate);
+                            if (intDate > t)
+                                listOfTransactions.Add(new Transaction(price: x.price, amount: x.amount));
+                        });
                     }
                 }
+                // TODO: What else in the error handling?
+                else
+                {
+                    Console.WriteLine("Request failed with status code: " + response.StatusCode);
+                }
             }
+            
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
