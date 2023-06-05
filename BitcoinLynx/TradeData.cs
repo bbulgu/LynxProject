@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-
+﻿using static BitcoinLynx.Utils;
 namespace BitcoinLynx
 {
     public enum Exchange
@@ -38,10 +37,6 @@ namespace BitcoinLynx
             initAttributes();
         }
 
-        private string calculateTimeStamp(int mins_ago)
-        {
-            return (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - mins_ago * 60).ToString();
-        }
 
         private void initAttributes()
         {
@@ -113,8 +108,8 @@ namespace BitcoinLynx
                 // TODO: What else in the error handling?
                 else
                 {
-                    Console.WriteLine("Request failed with status code: " + response.StatusCode);
-                    // TODO: Retry a couple times and then switch to a different api
+                    Console.WriteLine($"Request for api {api} failed with status code: {response.StatusCode}");
+                    // TODO: RETRY
                 }
             }
             
