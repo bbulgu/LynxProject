@@ -19,7 +19,7 @@ namespace BitcoinLynx
         {
             Exchange api = Exchange.Kraken;    // default
             string currencypair = "btcusd";
-            
+
 
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
@@ -41,6 +41,12 @@ namespace BitcoinLynx
                            currencypair = o.CurrencyPair;
                        }
 
+                       // only btcusd is supported in my kraken parser for now
+                       if (api == Exchange.Kraken)
+                       {
+                           currencypair = "btcusd";
+                       }
+
                    });
 
             Console.WriteLine($"Initialized with api {api}, currencypair {currencypair}");
@@ -48,6 +54,7 @@ namespace BitcoinLynx
             string unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 
             // Create a timer that triggers the query every 2 minutes
+            // TODO: This could be configurable as well (the frequency of the queries)
             timer = new Timer(async x => {
                 TradeData tradeData2mins = new TradeData(2, api, currencypair);
                 double vwap2mins = await tradeData2mins.queryAndCalculateVwapAsync();
@@ -55,7 +62,13 @@ namespace BitcoinLynx
                 double vwap10mins = await tradeData10mins.queryAndCalculateVwapAsync();
 
                 Console.WriteLine($"Vwap for the last 2 mins: {vwap2mins}, vwap for the last 10 mins: {vwap10mins}");
-                // check if it worked, try otherwise.
+
+
+                // add a sanity check
+                if (vwap2mins == 0 || vwap10mins == 0)
+                {
+                    Console.WriteLine("Vwap calculation returned zero, you might want to try a different api and/or currency pair");
+                }
 
                 if (vwap10mins > vwap2mins)
                 {
