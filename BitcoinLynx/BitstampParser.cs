@@ -19,10 +19,18 @@ namespace BitcoinLynx
         public List<Transaction> processJsonString(string jsonString)
         {
             List<Transaction> listOfTransactions = new List<Transaction> ();
-            List<BitstampTransaction> geminiTransactions = JsonConvert.DeserializeObject<List<BitstampTransaction>>(jsonString) ?? new List<BitstampTransaction>();
+            List<BitstampTransaction> bitstampTransactions;
+            try { 
+                bitstampTransactions = JsonConvert.DeserializeObject<List<BitstampTransaction>>(jsonString) ?? new List<BitstampTransaction>();
+            }
+            catch (JsonSerializationException ex)
+            {
+                Console.WriteLine("Error occurred during deserialization: " + ex.Message);
+                return listOfTransactions;
+            }
             int t = 0;
             Int32.TryParse(timestamp, out t);
-            geminiTransactions.ForEach(x =>
+            bitstampTransactions.ForEach(x =>
             {
                 // we need to check if the date is within our bounds
                 // bitstamp api does not provide filtering given a timestamp so we must do it ourselves here

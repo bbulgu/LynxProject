@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Quic;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BitcoinLynx
 {
@@ -13,7 +8,16 @@ namespace BitcoinLynx
         List<Transaction> listOfTransactions = new List<Transaction>();
         public List<Transaction> processJsonString(string jsonString)
         {
-            List<GeminiTransaction> geminiTransactions = JsonConvert.DeserializeObject<List<GeminiTransaction>>(jsonString) ?? new List<GeminiTransaction>();
+            List<GeminiTransaction> geminiTransactions;
+            try
+            {
+                geminiTransactions = JsonConvert.DeserializeObject<List<GeminiTransaction>>(jsonString) ?? new List<GeminiTransaction>();
+            }
+            catch (JsonSerializationException ex)
+            {
+                Console.WriteLine("Error occurred during deserialization: " + ex.Message);
+                return listOfTransactions;
+            }
             geminiTransactions.ForEach(x =>
             {
                 listOfTransactions.Add(new Transaction(price: x.price, amount: x.amount));

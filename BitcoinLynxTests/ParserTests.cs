@@ -47,5 +47,36 @@ namespace BitcoinLynxTests
 
 
         // TODO: Add tests for corrupted jsons
+        [TestMethod]
+        public void testKrakenParserErrorHandling()
+        {
+            string samplejson = "{}";
+            KrakenParser krakenParser = new KrakenParser();
+            List<Transaction> listOfTransactions = krakenParser.processJsonString(samplejson);
+
+            Assert.IsNotNull(listOfTransactions);
+            Assert.AreEqual(0, listOfTransactions.Count);
+        }
+
+        [TestMethod]
+        public void testGeminiParserErrorHandling()
+        {
+            string samplejson = "{\"error\":[],\"result\":{\"XXBTZUSD\":[[\"27066.80000\",\"0.00919129\",1685713298.177992,\"b\",\"l\",\"\",59796572],[\"27066.70000\",\"0.00920437\",1685713314.4194527,\"s\",\"l\",\"\",59796573],[\"27064.80000\",\"0.00106350\",1685713322.2329805,\"b\",\"m\",\"\",59796574]]}}";
+            GeminiParser geminiParser = new GeminiParser();
+            List<Transaction> listOfTransactions = geminiParser.processJsonString(samplejson);
+
+            Assert.IsNotNull(listOfTransactions);
+            Assert.AreEqual(0, listOfTransactions.Count);
+        }
+
+        public void testBitstampParserErrorHandling()
+        {
+            string samplejson = "{\"error\":[],\"result\":{\"XXBTZUSD\":[[\"27066.80000\",\"0.00919129\",1685713298.177992,\"b\",\"l\",\"\",59796572],[\"27066.70000\",\"0.00920437\",1685713314.4194527,\"s\",\"l\",\"\",59796573],[\"27064.80000\",\"0.00106350\",1685713322.2329805,\"b\",\"m\",\"\",59796574]]}}";
+            BitstampParser bitstampParser = new BitstampParser("1685916110");
+            List<Transaction> listOfTransactions = bitstampParser.processJsonString(samplejson);
+
+            Assert.IsNotNull(listOfTransactions);
+            Assert.AreEqual(0, listOfTransactions.Count);
+        }
     }
 }

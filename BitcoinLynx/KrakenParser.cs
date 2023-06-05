@@ -15,8 +15,8 @@ namespace BitcoinLynx
             KrakenRootObject root;
             try
             {
-                root = JsonConvert.DeserializeObject<KrakenRootObject>(jsonString) ?? new KrakenRootObject();
-                if (root != null)
+                root = JsonConvert.DeserializeObject<KrakenRootObject>(jsonString);
+                if (root != null && root.Result != null)
                 {
                     root.Result.XXBTZUSD.ForEach(x =>
                     {
@@ -33,7 +33,6 @@ namespace BitcoinLynx
             }
             catch(JsonSerializationException ex)
             {
-                // Custom error message
                 Console.WriteLine("Error occurred during deserialization: " + ex.Message);
             }
             
