@@ -18,8 +18,6 @@ namespace BitcoinLynx
         string url;              // url to get (depends on api)
         HttpClient client;
         public List<Transaction> listOfTransactions = new List<Transaction>(); // List of transactions that took place from timespan to now
-        public double volume;
-        public double vwap;
 
         public TradeData() // init with defaults
         {
@@ -44,8 +42,6 @@ namespace BitcoinLynx
             url = getUrl();
             client = new HttpClient();
             listOfTransactions = new List<Transaction>();
-            volume = 0;
-            vwap = 0;
         }
 
         private string getUrl()
@@ -65,11 +61,10 @@ namespace BitcoinLynx
 
         }
 
-        public async Task queryAndCalculateAsync()
+        public async Task<double> queryAndCalculateVwapAsync()
         {
             await QueryTradeData();
-            calculateStats();
-            printStats();
+            return TradeStats.calculateVwap(listOfTransactions);
         }
 
 
@@ -118,33 +113,13 @@ namespace BitcoinLynx
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
-    
-        void calculateVolume()
-        {
-            listOfTransactions.ForEach(t => volume += t.amount);
-        }
-
-        void calculateVwap()
-        {
-            double total_quantity = 0;
-            foreach (Transaction transaction in listOfTransactions)
-            {
-                vwap += transaction.price * transaction.amount;
-                total_quantity += transaction.amount;
-            }
-            vwap = vwap / total_quantity;
-        }
-        public void calculateStats()
-        {
-            calculateVolume();
-            calculateVwap();
-        }
-
+        /*
         void printStats()
         {
             Console.WriteLine($"For the transactions of the currency pair {currencypair} that took place in the last {mins_ago} minutes in the exchange {api}:");
             Console.WriteLine($"Volume: {volume}, vwap: {vwap}");
         }
+        */
     }
 
 
