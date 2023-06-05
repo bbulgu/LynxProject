@@ -2,7 +2,7 @@
   "profiles": {
     "BitcoinLynx": {
       "commandName": "Project",
-      "commandLineArgs": "-a kraken"
+      "commandLineArgs": "-a gemini"
     }
   }
 }

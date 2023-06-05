@@ -42,9 +42,10 @@ namespace BitcoinLynx
                        }
 
                    });
-        
 
-        string unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+            Console.WriteLine($"Initialized with api {api}, currencypair {currencypair}");
+
+            string unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 
             // Create a timer that triggers the query every 2 minutes
             timer = new Timer(async x => {
@@ -52,7 +53,10 @@ namespace BitcoinLynx
                 double vwap2mins = await tradeData2mins.queryAndCalculateVwapAsync();
                 TradeData tradeData10mins = new TradeData(10, api, currencypair);
                 double vwap10mins = await tradeData10mins.queryAndCalculateVwapAsync();
-                Console.WriteLine(api);
+
+                Console.WriteLine($"Vwap for the last 2 mins: {vwap2mins}, vwap for the last 10 mins: {vwap10mins}");
+                // check if it worked, try otherwise.
+
                 if (vwap10mins > vwap2mins)
                 {
                     Console.WriteLine("Price is going down.");

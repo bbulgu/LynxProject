@@ -1,6 +1,5 @@
 using BitcoinLynx;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using Moq;
 namespace BitcoinLynxTests
 {
     [TestClass]
@@ -32,6 +31,12 @@ namespace BitcoinLynxTests
         public void testVwap()
         {
             Assert.AreEqual(1, TradeStats.calculateVwap(list), 0.001, "Vwap not calculated correctly");
+        }
+
+        [TestMethod]
+        public void testFailedGet()
+        {
+            TradeData tradeData = new TradeData();
         }
 
         /* TODO: MOCK THESE

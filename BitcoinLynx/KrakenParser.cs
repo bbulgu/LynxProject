@@ -12,21 +12,31 @@ namespace BitcoinLynx
         List<Transaction> listOfTransactions = new List<Transaction>();
         public List<Transaction> processJsonString(string jsonString)
         {
-            KrakenRootObject root = JsonConvert.DeserializeObject<KrakenRootObject>(jsonString) ?? new KrakenRootObject();
-            if (root != null)
+            KrakenRootObject root;
+            try
             {
-                root.Result.XXBTZUSD.ForEach(x =>
+                root = JsonConvert.DeserializeObject<KrakenRootObject>(jsonString) ?? new KrakenRootObject();
+                if (root != null)
                 {
-                    double tryPrice = 0;
-                    double tryAmount = 0;
-                    Double.TryParse(x[0].ToString(), out tryPrice);
-                    Double.TryParse(x[1].ToString(), out tryAmount);
-                    if (tryPrice != 0 && tryAmount != 0)
+                    root.Result.XXBTZUSD.ForEach(x =>
                     {
-                        listOfTransactions.Add(new Transaction(price: tryPrice, amount: tryAmount));
-                    }
-                });
+                        double tryPrice = 0;
+                        double tryAmount = 0;
+                        Double.TryParse(x[0].ToString(), out tryPrice);
+                        Double.TryParse(x[1].ToString(), out tryAmount);
+                        if (tryPrice != 0 && tryAmount != 0)
+                        {
+                            listOfTransactions.Add(new Transaction(price: tryPrice, amount: tryAmount));
+                        }
+                    });
+                }
             }
+            catch(JsonSerializationException ex)
+            {
+                // Custom error message
+                Console.WriteLine("Error occurred during deserialization: " + ex.Message);
+            }
+            
             return listOfTransactions;
         }
     }

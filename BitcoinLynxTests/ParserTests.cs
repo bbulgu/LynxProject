@@ -1,4 +1,5 @@
 ﻿using BitcoinLynx;
+using Newtonsoft.Json;
 
 namespace BitcoinLynxTests
 {
@@ -43,5 +44,8 @@ namespace BitcoinLynxTests
             Assert.AreEqual(0.00919129, listOfTransactions.First().amount);
             Assert.AreEqual(27066.80000, listOfTransactions.First().price);
         }
+
+
+        // TODO: Add tests for corrupted jsons
     }
 }
