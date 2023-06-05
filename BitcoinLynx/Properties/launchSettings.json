@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BitcoinLynx": {
+      "commandName": "Project",
+      "commandLineArgs": "-a kraken"
+    }
+  }
+}

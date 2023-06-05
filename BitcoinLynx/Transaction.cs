@@ -27,7 +27,7 @@ namespace BitcoinLynx
         public int date;
     }
 
-    public class KrakenResult
+      public class KrakenResult
     {
         // TODO: This name won't work for different currency pairs!
         [JsonPropertyName("XXBTZUSD")]
