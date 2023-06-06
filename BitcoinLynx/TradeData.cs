@@ -91,24 +91,8 @@ namespace BitcoinLynx
                     {
                         // Read the response content
                         string jsonString = await response.Content.ReadAsStringAsync();
-                        if (api.Equals(Exchange.Gemini))
-                        {
-                            GeminiParser gemini = new GeminiParser();
-                            listOfTransactions = gemini.processJsonString(jsonString);
-                        }
-
-                        // TODO: Add some error handling in the type conversions here
-                        else if (api.Equals(Exchange.Bitstamp))
-                        {
-                            BitstampParser bitstamp = new BitstampParser(timestamp);
-                            listOfTransactions = bitstamp.processJsonString(jsonString);
-                        }
-
-                        else if (api.Equals(Exchange.Kraken))
-                        {
-                            KrakenParser kraken = new KrakenParser();
-                            listOfTransactions = kraken.processJsonString(jsonString);
-                        }
+                        ApiParser parser = ApiParserFactory.GetApiParser(api, timestamp);
+                        listOfTransactions = parser.processJsonString(jsonString);
                         return;
                     }
                     // TODO: What else in the error handling?

@@ -1,6 +1,6 @@
 ﻿namespace BitcoinLynx.Parser
 {
-    internal interface ApiParser
+    public interface ApiParser
     {
         List<Transaction> processJsonString(string json);
     }
