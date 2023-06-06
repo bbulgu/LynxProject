@@ -16,6 +16,8 @@ namespace BitcoinLynx
         string currencypair;    // which currency pair to query for
 
         string timestamp;        // a unix time stamp: time to query from (to now)
+
+        public QueryEngine engine;
         public List<Transaction> listOfTransactions = new List<Transaction>(); // List of transactions that took place from timespan to now
 
         public TradeStats tradeStats;
@@ -55,7 +57,7 @@ namespace BitcoinLynx
         // method to query the chosen api with the chosen currency pair
         public async Task QueryTradeData()
         {
-            QueryEngine engine = new QueryEngine(ApiRequestBuilder.getUrl(api, currencypair, timestamp));
+            engine = new QueryEngine(ApiRequestBuilder.getUrl(api, currencypair, timestamp));
             string jsonString = await engine.queryApi();
             
             if (jsonString == null)

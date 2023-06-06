@@ -18,15 +18,18 @@
 
         public void calculateVwap()
         {
-            // only calculate if not calculated before
-            if (volume == 0)
-                calculateVolume();
-
-            foreach (Transaction transaction in transactions)
+            if (transactions.Count == 0)
             {
-                vwap += transaction.price * transaction.amount;
+                vwap = 0;
             }
-            vwap = vwap / volume;
+                
+            else { 
+                foreach (Transaction transaction in transactions)
+                {
+                    vwap += transaction.price * transaction.amount;
+                }
+                vwap = vwap / volume;
+            }
         }
         public void calculateStats()
         {

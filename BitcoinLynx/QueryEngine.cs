@@ -49,6 +49,7 @@ namespace BitcoinLynx
 
                 catch (Exception ex)
                 {
+                    retries++;
                     Console.WriteLine("An error occurred: " + ex.Message);
                 }
             }
