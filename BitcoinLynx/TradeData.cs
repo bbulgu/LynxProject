@@ -15,8 +15,10 @@ namespace BitcoinLynx
 
         string timestamp;        // a unix time stamp: time to query from (to now)
         string url;              // url to get (depends on api)
-        HttpClient client;
+        public HttpClient client;
         public List<Transaction> listOfTransactions = new List<Transaction>(); // List of transactions that took place from timespan to now
+
+        public TradeStats tradeStats;
 
         int max_retries = 5;
         int retry_delay = 1000;
@@ -65,10 +67,11 @@ namespace BitcoinLynx
 
         }
 
-        public async Task<double> queryAndCalculateVwapAsync()
+        public async Task queryAndCalculateAsync()
         {
             await QueryTradeData();
-            return TradeStats.calculateVwap(listOfTransactions);
+            tradeStats = new TradeStats(listOfTransactions);
+            tradeStats.calculateStats();
         }
 
 
@@ -124,18 +127,7 @@ namespace BitcoinLynx
                 }
             }
         }
-        /*
-        void printStats()
-        {
-            Console.WriteLine($"For the transactions of the currency pair {currencypair} that took place in the last {mins_ago} minutes in the exchange {api}:");
-            Console.WriteLine($"Volume: {volume}, vwap: {vwap}");
-        }
-        */
+        
     }
-
-
-
-
-
 
 }

@@ -57,10 +57,14 @@ namespace BitcoinLynx
             // TODO: This could be configurable as well (the frequency of the queries)
             timer = new Timer(async x => {
                 TradeData tradeData2mins = new TradeData(2, api, currencypair);
-                double vwap2mins = await tradeData2mins.queryAndCalculateVwapAsync();
                 TradeData tradeData10mins = new TradeData(10, api, currencypair);
-                double vwap10mins = await tradeData10mins.queryAndCalculateVwapAsync();
+                await tradeData2mins.queryAndCalculateAsync();
+                await tradeData10mins.queryAndCalculateAsync();
 
+                double vwap2mins = tradeData2mins.tradeStats.vwap;
+                double vwap10mins = tradeData10mins.tradeStats.vwap;
+
+                Console.WriteLine($"Volume for the last 2 mins: {tradeData2mins.tradeStats.volume}, volume for the last 10 mins: {tradeData10mins.tradeStats.volume}");
                 Console.WriteLine($"Vwap for the last 2 mins: {vwap2mins}, vwap for the last 10 mins: {vwap10mins}");
 
 

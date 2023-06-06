@@ -6,6 +6,7 @@ namespace BitcoinLynxTests
     public class BitcoinLynxTests
     {
         TradeData td;
+        TradeStats ts;
         List<Transaction> list;
         [TestInitialize]
         public void setUp()
@@ -17,38 +18,36 @@ namespace BitcoinLynxTests
             list.Add(t1);
             list.Add(t2);
 
-            td = new TradeData();
-            td.listOfTransactions = list;
+            ts = new TradeStats(list);
+            ts.calculateStats();
         }
 
         [TestMethod]
         public void testVolume()
         {
-            Assert.AreEqual(20, TradeStats.calculateVolume(list), 0.001, "Volume not calculated correctly");
+            Assert.AreEqual(20, ts.volume, 0.001, "Volume not calculated correctly");
         }
 
         [TestMethod]
         public void testVwap()
         {
-            Assert.AreEqual(1, TradeStats.calculateVwap(list), 0.001, "Vwap not calculated correctly");
+            Assert.AreEqual(1, ts.vwap, 0.001, "Vwap not calculated correctly");
         }
-
-        [TestMethod]
-        public void testFailedGet()
-        {
-            TradeData tradeData = new TradeData();
-        }
-
         /* TODO: MOCK THESE
-
         [TestMethod]
         public async Task testDefaults()
         {
             TradeData tradeData = new TradeData();       // test default constructor
+            tradeData.client = Mock
             await tradeData.QueryTradeData();            // test query and calc
-            tradeData.calculateStats(); 
+            
+            tradeData.calculateStats();
             Assert.AreNotEqual(0, tradeData.volume, 0);  // assert that there is actually some data we were able to fetch and calculate
         }
+
+        
+
+        
 
         [TestMethod]
         public async Task testBitstamp()

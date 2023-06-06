@@ -1,34 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BitcoinLynx
+﻿namespace BitcoinLynx
 {
     public class TradeStats
     {
-        public static double calculateVolume(List<Transaction> transactions)
+        public double vwap = 0;
+        public double volume = 0;
+        List<Transaction> transactions;
+
+        public TradeStats(List<Transaction> transactions)
         {
-            double volume = 0;
-            transactions.ForEach(t => volume += t.amount);
-            return volume;
+            this.transactions = transactions;  
         }
 
-        public static double calculateVwap(List<Transaction> transactions)
+        public void calculateVolume()
         {
-            double volume = calculateVolume(transactions);
-            double vwap = 0;
+            transactions.ForEach(t => volume += t.amount);           
+        }
+
+        public void calculateVwap()
+        {
+            // only calculate if not calculated before
+            if (volume == 0)
+                calculateVolume();
+
             foreach (Transaction transaction in transactions)
             {
                 vwap += transaction.price * transaction.amount;
             }
-            return vwap / volume;
+            vwap = vwap / volume;
         }
-        public static void calculateStats(List<Transaction> transactions)
+        public void calculateStats()
         {
-            calculateVolume(transactions);
-            calculateVwap(transactions);
+            calculateVolume();
+            calculateVwap();
         }
     }
 }
