@@ -1,4 +1,5 @@
-﻿using BitcoinLynx.Parser;
+﻿using BitcoinLynx.ApiParsers;
+using BitcoinLynx.Parser;
 using static BitcoinLynx.Utils;
 namespace BitcoinLynx
 {
@@ -46,26 +47,9 @@ namespace BitcoinLynx
         private void initAttributes()
         {
             timestamp = calculateTimeStamp(this.mins_ago);
-            url = getUrl();
+            url = ApiRequestBuilder.getUrl(api, currencypair, timestamp);
             client = new HttpClient();
             listOfTransactions = new List<Transaction>();
-        }
-
-        private string getUrl()
-        {
-            if (api.Equals(Exchange.Bitstamp))
-            {
-                return $"https://www.bitstamp.net/api/v2/transactions/{currencypair}/?time=hour";
-            }
-            else if (api.Equals(Exchange.Kraken))
-            {
-                return $"https://api.kraken.com/0/public/Trades?pair={currencypair}&since={timestamp}";
-            }
-            else  // default to gemini
-            {
-                return $"https://api.gemini.com/v1/trades/{currencypair}?timestamp={timestamp}";
-            }
-
         }
 
         public async Task queryAndCalculateAsync()
