@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 
-namespace BitcoinLynx
+namespace BitcoinLynx.Parser
 {
     public class GeminiParser : ApiParser
     {

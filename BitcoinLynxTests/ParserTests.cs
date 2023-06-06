@@ -1,4 +1,5 @@
 ﻿using BitcoinLynx;
+using BitcoinLynx.Parser;
 using Newtonsoft.Json;
 
 namespace BitcoinLynxTests

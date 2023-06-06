@@ -1,5 +1,4 @@
-﻿
-namespace BitcoinLynx
+﻿namespace BitcoinLynx.Parser
 {
     internal interface ApiParser
     {

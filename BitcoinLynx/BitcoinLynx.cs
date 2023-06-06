@@ -21,7 +21,7 @@ namespace BitcoinLynx
             string currencypair = "btcusd";
 
 
-            Parser.Default.ParseArguments<Options>(args)
+            CommandLine.Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
                    {
                        if (o.Api != null)

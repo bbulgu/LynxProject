@@ -1,4 +1,5 @@
-﻿using static BitcoinLynx.Utils;
+﻿using BitcoinLynx.Parser;
+using static BitcoinLynx.Utils;
 namespace BitcoinLynx
 {
     public enum Exchange

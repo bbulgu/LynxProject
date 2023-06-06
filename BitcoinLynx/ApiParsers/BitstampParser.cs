@@ -5,22 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BitcoinLynx
+namespace BitcoinLynx.Parser
 {
     public class BitstampParser : ApiParser
     {
-        String timestamp;
+        string timestamp;
         List<Transaction> listOfTransactions = new List<Transaction>();
 
-        public BitstampParser(String timestamp)
+        public BitstampParser(string timestamp)
         {
             this.timestamp = timestamp;
         }
         public List<Transaction> processJsonString(string jsonString)
         {
-            List<Transaction> listOfTransactions = new List<Transaction> ();
+            List<Transaction> listOfTransactions = new List<Transaction>();
             List<BitstampTransaction> bitstampTransactions;
-            try { 
+            try
+            {
                 bitstampTransactions = JsonConvert.DeserializeObject<List<BitstampTransaction>>(jsonString) ?? new List<BitstampTransaction>();
             }
             catch (JsonSerializationException ex)
@@ -29,7 +30,7 @@ namespace BitcoinLynx
                 return listOfTransactions;
             }
             int t = 0;
-            Int32.TryParse(timestamp, out t);
+            int.TryParse(timestamp, out t);
             bitstampTransactions.ForEach(x =>
             {
                 // we need to check if the date is within our bounds
